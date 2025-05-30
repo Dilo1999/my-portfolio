@@ -16,26 +16,31 @@ export default function Navbar() {
 
   return (
     <nav>
-      <div className="logo">MyPortfolio</div>
-      <div className="menu-icon" onClick={toggleNav}>
-        {navOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-      </div>
+      <div className="nav-container">
+        <div className="logo">MyPortfolio</div>
 
-      <ul className={navOpen ? "open" : ""}>
-        {navLinks.map(({ id, to, label }) => (
-          <li key={id}>
-            <Link
-              to={to}
-              smooth={true}
-              duration={500}
-              offset={-70}
-              onClick={() => setNavOpen(false)}
-            >
-              {label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+        <ul className={navOpen ? "nav-links open" : "nav-links"}>
+          {navLinks.map(({ id, to, label }) => (
+            <li key={id}>
+              <Link
+                to={to}
+                smooth={true}
+                duration={500}
+                offset={-70}
+                spy={true}
+                activeClass="active"
+                onClick={() => setNavOpen(false)}
+              >
+                {label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <div className="menu-icon" onClick={toggleNav}>
+          {navOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+        </div>
+      </div>
     </nav>
   );
 }
