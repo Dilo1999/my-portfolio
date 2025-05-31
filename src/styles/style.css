@@ -68,20 +68,25 @@ nav {
 .menu-icon {
   display: none;
   cursor: pointer;
+  z-index: 51;
+  position: relative;
 }
 
 /* Mobile */
 @media (max-width: 768px) {
   .nav-links {
     position: absolute;
-    top: 60px;
+    top: 64px;
     left: 0;
     background: black;
+    background: rgba(0, 0, 0, 0.95);
     width: 100%;
     flex-direction: column;
     align-items: center;
     transform: translateY(-100%);
     transition: transform 0.3s ease-in-out;
+    z-index: 50;
+
   }
 
   .nav-links.open {
@@ -297,7 +302,7 @@ section {
 /* Projects Section */
 #projects {
   background: linear-gradient(to bottom right, #0f0f0f, #1c1c1c);
-  padding: 100px 24px;
+  padding: 50px 24px;
   color: #f3f4f6;
 }
 
@@ -312,7 +317,7 @@ section {
 /* Grid Layout */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(500px, 10fr));
   gap: 36px;
   max-width: 1280px;
   margin: 0 auto;

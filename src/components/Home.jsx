@@ -23,7 +23,7 @@ export default function Home() {
           </div>
           <div className="intro-text">
             <h1>Hello, I'm <span className="highlight">Dilshan Senanayaka</span></h1>
-            <h2 className="tagline">Final Year ICT Undergraduate | Frontend & Mobile Developer</h2>
+            <h2 className="tagline">Final Year ICT Undergraduate | Frontend | Mobile and Web Developer</h2>
             <p className="intro">
               I'm a passionate software developer experienced in building web and mobile applications.
               I specialize in React, Laravel, Firebase, and mobile app development using Android Studio.
