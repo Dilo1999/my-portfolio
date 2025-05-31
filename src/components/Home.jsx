@@ -26,7 +26,7 @@ export default function Home() {
             <h2 className="tagline">Final Year ICT Undergraduate | Frontend | Mobile and Web Developer</h2>
             <p className="intro">
               I'm a passionate software developer experienced in building web and mobile applications.
-              I specialize in React, Laravel, Firebase, and mobile app development using Android Studio.
+              I specialize in React, Laravel, Firebase, and mobile app development using Android Studio | Flutter | React Native Expo.
               I love creating solutions that are both functional and beautifully crafted.
             </p>
             <div className="social-icons">
