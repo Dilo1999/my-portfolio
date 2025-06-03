@@ -9,7 +9,7 @@ const projects = [
     image: "https://elearningindustry.com/wp-content/uploads/2020/08/why-universities-should-use-an-lms.jpg",
     demoLink: "#",
     codeLink: "https://github.com/Dilo1999",
-    techIcons: ["src/assets/android.png", "src/assets/icons/firebase.png", "src/assets/icons/java.png"],
+    techIcons: ["public/android.png", "src/assets/icons/firebase.png", "src/assets/icons/java.png"],
   },
   {
     id: 2,
