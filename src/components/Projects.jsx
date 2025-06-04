@@ -156,19 +156,18 @@ export default function Projects() {
     <section id="projects">
       <h2 className="project-heading">A Small Selection Of My Recent Projects</h2>
       <div className="projects-grid">
-        {projects.map(({ id, title, description, image, demoLink, codeLink, techIcons }) => (
+        {projects.map(({ id, title, description, image, codeLink, techIcons }) => (
           <div key={id} className="project-card">
             <img src={image} alt={title} className="project-image" />
             <h3>{title}</h3>
             <p>{description}</p>
-            <div className="tech-icons">
-              {techIcons.map((icon, index) => (
-                <img key={index} src={icon} alt="tech" className="tech-icon" />
-              ))}
-            </div>
-            <div className="project-links">
-              <a href={demoLink} target="_blank" rel="noreferrer">View more</a>
-              <a href={codeLink} target="_blank" rel="noreferrer">Code</a>
+            <div className="project-footer">
+              <div className="tech-icons">
+                {techIcons.map((icon, index) => (
+                  <img key={index} src={icon} alt="tech" className="tech-icon" />
+                ))}
+              </div>
+              <a href={codeLink} target="_blank" rel="noreferrer">Check out Project</a>
             </div>
           </div>
         ))}

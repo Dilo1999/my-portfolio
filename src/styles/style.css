@@ -323,7 +323,6 @@ section {
 
 
 
-
 /* Projects Section */
 #projects {
   background: linear-gradient(to bottom right, #0b0b0b, #111);
@@ -399,24 +398,13 @@ section {
   margin-bottom: 20px;
 }
 
-/* Links */
-.project-links {
+/* Footer Row: Tech Icons + Link */
+.project-footer {
   display: flex;
-  gap: 16px;
+  justify-content: space-between;
+  align-items: center;
   margin-top: auto;
-}
-
-.project-card a {
-  color: #22d3ee;
-  background-color: transparent;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.25s ease, text-decoration 0.25s ease;
-}
-
-.project-card a:hover {
-  color: #67e8f9;
-  text-decoration: underline;
+  margin-top: 20px;
 }
 
 /* Tech Icons */
@@ -424,18 +412,34 @@ section {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-bottom: 16px;
 }
 
 .tech-icon {
   width: 32px;
   height: 32px;
   object-fit: contain;
+  background-color: #1e1e1e;
+  padding: 6px;
+  border-radius: 50%;
   transition: transform 0.3s ease;
 }
 
 .tech-icon:hover {
   transform: scale(1.1);
+}
+
+/* Link Styling */
+.project-card a {
+  color: #b0b0c0;
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.25s ease, text-decoration 0.25s ease;
+}
+
+.project-card a:hover {
+  color: #ffffff;
+  text-decoration: underline;
 }
 
 
