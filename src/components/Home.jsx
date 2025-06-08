@@ -10,7 +10,7 @@ function FallingLetters({ text }) {
         <span
           key={idx}
           className="falling-letter"
-          style={{ animationDelay: `${idx * 0.1}s` }}
+          style={{ animationDelay: `${idx * 0.2}s` }}
         >
           {char === " " ? "\u00A0" : char}
         </span>
