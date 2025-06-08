@@ -121,14 +121,19 @@ section {
 
 /* Home */
 .home-section {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   background-color: #000;
   color: white;
+  overflow: hidden;
+  z-index: 1;
 }
 
 .home-container {
+  position: relative;
+  z-index: 2;
   max-width: 1200px;
   margin: 0 auto;
   padding: 80px 24px;
@@ -185,6 +190,24 @@ section {
   margin-bottom: 24px;
 }
 
+/* Animated sentence styles */
+.animated-sentence {
+  border-right: 2px solid #22d3ee;
+  padding-right: 4px;
+  white-space: nowrap;
+  animation: blinkCursor 1s steps(2, start) infinite;
+}
+
+/* Blinking cursor animation */
+@keyframes blinkCursor {
+  0%, 100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #22d3ee;
+  }
+}
+
 .social-icons {
   display: flex;
   justify-content: center;
@@ -225,6 +248,7 @@ section {
 .download-btn:hover {
   background-color: #0e7490;
 }
+
 /* Canvas background */
 .comet-canvas {
   position: absolute;
@@ -235,22 +259,57 @@ section {
   height: 100%;
   pointer-events: none;
 }
-
-.home-section {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  background-color: #000;
-  color: white;
-  overflow: hidden;
-  z-index: 1;
+/* Falling letters animation */
+.falling-letters {
+  display: inline-block;
+  white-space: nowrap;
 }
 
-.home-container {
-  position: relative;
-  z-index: 2;
+.falling-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(-100px);
+  animation: fallIn 0.5s forwards ease-out;
 }
+
+.falling-letter:nth-child(odd) {
+  animation-timing-function: cubic-bezier(0.42, 0, 0.58, 1);
+}
+
+@keyframes fallIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animated sentence styles */
+.animated-sentence {
+  border-right: 2px solid #22d3ee;
+  padding-right: 4px;
+  white-space: nowrap;
+  animation: blinkCursor 1s steps(2, start) infinite;
+}
+
+@keyframes blinkCursor {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+  50% {
+    border-color: #22d3ee;
+  }
+}
+
+/* (Keep your existing CSS unchanged) */
+
+
+
+
+
+
+
+
 
 
 

@@ -1,7 +1,44 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 import profilePic from "../assets/profile.jpg";
 import resumePDF from "../assets/Dilshan_Senanayaka_CV.pdf";
+
+function FallingLetters({ text }) {
+  return (
+    <span className="falling-letters">
+      {text.split("").map((char, idx) => (
+        <span
+          key={idx}
+          className="falling-letter"
+          style={{ animationDelay: `${idx * 0.1}s` }}
+        >
+          {char === " " ? "\u00A0" : char}
+        </span>
+      ))}
+    </span>
+  );
+}
+
+function AnimatedSentence() {
+  const fullText =
+    "I'm a passionate software developer experienced in building web and mobile applications.";
+  const [displayedText, setDisplayedText] = useState("");
+
+  useEffect(() => {
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      setDisplayedText(fullText.slice(0, currentIndex + 1));
+      currentIndex++;
+      if (currentIndex === fullText.length) {
+        clearInterval(interval);
+      }
+    }, 50); // typing speed
+
+    return () => clearInterval(interval);
+  }, []);
+
+  return <span className="animated-sentence">{displayedText}</span>;
+}
 
 export default function Home() {
   const canvasRef = useRef(null);
@@ -58,10 +95,14 @@ export default function Home() {
     }
 
     animate();
-    window.addEventListener("resize", () => {
+
+    function handleResize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    });
+    }
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (
@@ -74,17 +115,20 @@ export default function Home() {
           </div>
           <div className="intro-text">
             <h1>
-              Hello, I'm <span className="highlight">Dilshan Senanayaka</span>
+              Hello, I'm <FallingLetters text="Dilshan Senanayaka" />
             </h1>
             <h2 className="tagline">
               Final Year ICT Undergraduate | Frontend | Mobile and Web Developer
             </h2>
             <p className="intro">
-              I'm a passionate software developer experienced in building web and
-              mobile applications. I specialize in React, Laravel, Firebase, and
-              mobile app development using Android Studio | Flutter | React Native
-              Expo. I love creating solutions that are both functional and
-              beautifully crafted.
+              <AnimatedSentence />
+              <span>
+                {" "}
+                I specialize in React, Laravel, Firebase, and mobile app
+                development using Android Studio | Flutter | React Native Expo.
+                I love creating solutions that are both functional and
+                beautifully crafted.
+              </span>
             </p>
             <div className="social-icons">
               <a
