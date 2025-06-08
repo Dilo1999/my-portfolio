@@ -32,7 +32,7 @@ function AnimatedSentence() {
       if (currentIndex === fullText.length) {
         clearInterval(interval);
       }
-    }, 50); // typing speed
+    }, 50);
 
     return () => clearInterval(interval);
   }, []);
@@ -42,18 +42,50 @@ function AnimatedSentence() {
 
 export default function Home() {
   const canvasRef = useRef(null);
+  const profileRef = useRef(null);
+  const [dotStyle, setDotStyle] = useState({
+    left: 0,
+    top: 0,
+    backgroundColor: "red",
+  });
+  const hueRef = useRef(0);
 
+  // Canvas animation: stars, comets, circles
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
 
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    // Stars setup
+    let stars = [];
+    function createStars(count) {
+      const starsArray = [];
+      for (let i = 0; i < count; i++) {
+        starsArray.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: Math.random() * 1.5 + 0.5,
+          baseAlpha: Math.random() * 0.5 + 0.3,
+          alpha: 0,
+          alphaDirection: 1,
+        });
+      }
+      return starsArray;
+    }
+    stars = createStars(150);
+
+    // Comets & Circles
     let comets = [];
+    let circles = [];
 
     function createComet() {
       return {
-        x: Math.random() * canvas.width,
+        x: Math.random() * width,
         y: -20,
         length: Math.random() * 100 + 50,
         speed: Math.random() * 5 + 2,
@@ -77,8 +109,74 @@ export default function Home() {
       ctx.stroke();
     }
 
+    function createCircle(x, y) {
+      const colors = [
+        "#22d3ee",
+        "#3b82f6",
+        "#10b981",
+        "#f97316",
+        "#8b5cf6",
+        "#ec4899",
+        "#facc15",
+      ];
+      return {
+        x,
+        y,
+        radius: 0,
+        maxRadius: 50 + Math.random() * 30,
+        alpha: 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      };
+    }
+
+    function drawCircle(c) {
+      const gradient = ctx.createRadialGradient(
+        c.x,
+        c.y,
+        c.radius * 0.1,
+        c.x,
+        c.y,
+        c.radius
+      );
+      gradient.addColorStop(0, `rgba(${hexToRgb(c.color)}, ${c.alpha})`);
+      gradient.addColorStop(1, `rgba(${hexToRgb(c.color)}, 0)`);
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function hexToRgb(hex) {
+      const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+      hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result
+        ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(
+            result[3],
+            16
+          )}`
+        : "255, 255, 255";
+    }
+
+    function drawStars() {
+      stars.forEach((star) => {
+        star.alpha += 0.01 * star.alphaDirection;
+        if (star.alpha >= star.baseAlpha) star.alphaDirection = -1;
+        if (star.alpha <= 0) star.alphaDirection = 1;
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha.toFixed(2)})`;
+        ctx.fill();
+      });
+    }
+
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, width, height);
+
+      drawStars();
 
       if (Math.random() < 0.02) comets.push(createComet());
 
@@ -91,18 +189,72 @@ export default function Home() {
         else drawComet(comet);
       });
 
+      circles.forEach((circle, index) => {
+        circle.radius += 1.5;
+        circle.alpha -= 0.02;
+
+        if (circle.alpha <= 0) circles.splice(index, 1);
+        else drawCircle(circle);
+      });
+
       requestAnimationFrame(animate);
     }
 
-    animate();
+    function handleMouseMove(e) {
+      circles.push(createCircle(e.clientX, e.clientY));
+    }
 
     function handleResize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+      stars = createStars(150);
     }
+
+    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener("resize", handleResize);
+    animate();
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // Spinning RGB dot orbiting profile picture
+  useEffect(() => {
+    if (!profileRef.current) return;
+
+    const radius = 100; // orbit radius
+    const centerX = radius;
+    const centerY = radius;
+    const dotRadius = 16;
+
+    let angle = 0;
+
+    function animateDot() {
+      angle += 0.02;
+      if (angle > 2 * Math.PI) angle -= 2 * Math.PI;
+
+      const x = centerX + radius * Math.cos(angle) - dotRadius / 2;
+      const y = centerY + radius * Math.sin(angle) - dotRadius / 2;
+
+      hueRef.current += 1;
+      if (hueRef.current > 360) hueRef.current = 0;
+      const color = `hsl(${hueRef.current}, 100%, 50%)`;
+
+      setDotStyle({
+        left: x,
+        top: y,
+        backgroundColor: color,
+      });
+
+      requestAnimationFrame(animateDot);
+    }
+
+    animateDot();
   }, []);
 
   return (
@@ -110,9 +262,30 @@ export default function Home() {
       <canvas ref={canvasRef} className="comet-canvas" />
       <div className="home-container">
         <div className="home-content">
-          <div className="profile-pic">
-            <img src={profilePic} alt="Dilshan Senanayaka" />
+          <div
+            className="profile-pic"
+            ref={profileRef}
+            style={{ position: "relative", width: 200, height: 200 }}
+          >
+            <img
+              src={profilePic}
+              alt="Dilshan Senanayaka"
+              style={{ width: "100%", height: "100%", borderRadius: "50%" }}
+            />
+            <span
+              className="spinning-dot"
+              style={{
+                position: "absolute",
+                width: 16,
+                height: 16,
+                borderRadius: "50%",
+                boxShadow: "0 0 8px rgba(255,255,255,0.7)",
+                pointerEvents: "none",
+                ...dotStyle,
+              }}
+            />
           </div>
+
           <div className="intro-text">
             <h1>
               Hello, I'm <FallingLetters text="Dilshan Senanayaka" />

@@ -300,6 +300,10 @@ section {
     border-color: #22d3ee;
   }
 }
+.spinning-dot {
+  transition: background-color 0.3s linear;
+}
+
 
 
 
