@@ -269,7 +269,7 @@ section {
   display: inline-block;
   opacity: 0;
   transform: translateY(-100px);
-  animation: fallIn 0.5s forwards ease-out;
+  animation: fallIn 1s forwards ease-out;
 }
 
 .falling-letter:nth-child(odd) {
@@ -301,7 +301,6 @@ section {
   }
 }
 
-/* (Keep your existing CSS unchanged) */
 
 
 

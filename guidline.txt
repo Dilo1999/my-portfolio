@@ -1,0 +1,8 @@
+# Run code = npm run dev 
+
+Git Upload = git init  
+             git add .   
+             git commit -m "update  Home"   
+             git push origin main   
+             npm run build    
+             npm run deploy 
