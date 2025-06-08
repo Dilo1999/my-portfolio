@@ -46,29 +46,71 @@ export default function Home() {
   const [dotStyle, setDotStyle] = useState({
     left: 0,
     top: 0,
-    backgroundColor: "red",
+    backgroundColor: "hsl(0, 100%, 50%)",
   });
   const hueRef = useRef(0);
 
-  // Canvas animation: stars, comets, circles
+  useEffect(() => {
+    if (!profileRef.current) return;
+
+    const radius = 100; // radius of the orbit path (adjust as needed)
+    const centerX = radius;
+    const centerY = radius;
+    const dotRadius = 16; // size of comet head
+    let angle = 0;
+
+    function animateDot() {
+      angle += 0.02;
+      if (angle > 2 * Math.PI) angle -= 2 * Math.PI;
+
+      // Calculate position of the comet head on the circular orbit
+      const x = centerX + radius * Math.cos(angle) - dotRadius / 2;
+      const y = centerY + radius * Math.sin(angle) - dotRadius / 2;
+
+      // Increment hue for rainbow effect
+      hueRef.current = (hueRef.current + 2) % 360;
+      const color = `hsl(${hueRef.current}, 100%, 50%)`;
+
+      setDotStyle({
+        left: x,
+        top: y,
+        backgroundColor: color,
+      });
+
+      requestAnimationFrame(animateDot);
+    }
+
+    animateDot();
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    function hexToRgb(hex) {
+      const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+      hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
 
-    canvas.width = width;
-    canvas.height = height;
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      return result
+        ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(
+            result[3],
+            16
+          )}`
+        : "255, 255, 255";
+    }
 
-    // Stars setup
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
     let stars = [];
+
     function createStars(count) {
       const starsArray = [];
       for (let i = 0; i < count; i++) {
         starsArray.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
           radius: Math.random() * 1.5 + 0.5,
           baseAlpha: Math.random() * 0.5 + 0.3,
           alpha: 0,
@@ -77,15 +119,28 @@ export default function Home() {
       }
       return starsArray;
     }
+
     stars = createStars(150);
 
-    // Comets & Circles
+    function drawStars() {
+      stars.forEach((star) => {
+        star.alpha += 0.01 * star.alphaDirection;
+        if (star.alpha >= star.baseAlpha) star.alphaDirection = -1;
+        if (star.alpha <= 0) star.alphaDirection = 1;
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha.toFixed(2)})`;
+        ctx.fill();
+      });
+    }
+
     let comets = [];
     let circles = [];
 
     function createComet() {
       return {
-        x: Math.random() * width,
+        x: Math.random() * canvas.width,
         y: -20,
         length: Math.random() * 100 + 50,
         speed: Math.random() * 5 + 2,
@@ -147,34 +202,8 @@ export default function Home() {
       ctx.fill();
     }
 
-    function hexToRgb(hex) {
-      const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-      hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
-
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-      return result
-        ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(
-            result[3],
-            16
-          )}`
-        : "255, 255, 255";
-    }
-
-    function drawStars() {
-      stars.forEach((star) => {
-        star.alpha += 0.01 * star.alphaDirection;
-        if (star.alpha >= star.baseAlpha) star.alphaDirection = -1;
-        if (star.alpha <= 0) star.alphaDirection = 1;
-
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha.toFixed(2)})`;
-        ctx.fill();
-      });
-    }
-
     function animate() {
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       drawStars();
 
@@ -204,132 +233,127 @@ export default function Home() {
       circles.push(createCircle(e.clientX, e.clientY));
     }
 
+    window.addEventListener("mousemove", handleMouseMove);
+
     function handleResize() {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
       stars = createStars(150);
     }
-
-    window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("resize", handleResize);
 
     animate();
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
-  // Spinning RGB dot orbiting profile picture
-  useEffect(() => {
-    if (!profileRef.current) return;
-
-    const radius = 100; // orbit radius
-    const centerX = radius;
-    const centerY = radius;
-    const dotRadius = 16;
-
-    let angle = 0;
-
-    function animateDot() {
-      angle += 0.02;
-      if (angle > 2 * Math.PI) angle -= 2 * Math.PI;
-
-      const x = centerX + radius * Math.cos(angle) - dotRadius / 2;
-      const y = centerY + radius * Math.sin(angle) - dotRadius / 2;
-
-      hueRef.current += 1;
-      if (hueRef.current > 360) hueRef.current = 0;
-      const color = `hsl(${hueRef.current}, 100%, 50%)`;
-
-      setDotStyle({
-        left: x,
-        top: y,
-        backgroundColor: color,
-      });
-
-      requestAnimationFrame(animateDot);
-    }
-
-    animateDot();
-  }, []);
-
   return (
-    <section id="home" className="home-section">
-      <canvas ref={canvasRef} className="comet-canvas" />
-      <div className="home-container">
-        <div className="home-content">
-          <div
-            className="profile-pic"
-            ref={profileRef}
-            style={{ position: "relative", width: 200, height: 200 }}
-          >
-            <img
-              src={profilePic}
-              alt="Dilshan Senanayaka"
-              style={{ width: "100%", height: "100%", borderRadius: "50%" }}
-            />
-            <span
-              className="spinning-dot"
-              style={{
-                position: "absolute",
-                width: 16,
-                height: 16,
-                borderRadius: "50%",
-                boxShadow: "0 0 8px rgba(255,255,255,0.7)",
-                pointerEvents: "none",
-                ...dotStyle,
-              }}
-            />
-          </div>
+    <>
+      {/* Inline styles for comet tail */}
+      <style>{`
+        .spinning-comet {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(1.5px);
+          box-shadow: 0 0 10px 5px currentColor;
+          pointer-events: none;
+        }
+        .spinning-comet::before {
+          content: "";
+          position: absolute;
+          left: -30px;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 30px;
+          height: 10px;
+          background: linear-gradient(
+            to left,
+            rgba(255 255 255 / 0.8),
+            rgba(255 255 255 / 0)
+          );
+          border-radius: 50%;
+          filter: blur(2px);
+          opacity: 0.6;
+          pointer-events: none;
+        }
+      `}</style>
 
-          <div className="intro-text">
-            <h1>
-              Hello, I'm <FallingLetters text="Dilshan Senanayaka" />
-            </h1>
-            <h2 className="tagline">
-              Final Year ICT Undergraduate | Frontend | Mobile and Web Developer
-            </h2>
-            <p className="intro">
-              <AnimatedSentence />
-              <span>
-                {" "}
-                I specialize in React, Laravel, Firebase, and mobile app
-                development using Android Studio | Flutter | React Native Expo.
-                I love creating solutions that are both functional and
-                beautifully crafted.
-              </span>
-            </p>
-            <div className="social-icons">
-              <a
-                href="https://github.com/Dilo1999"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FaGithub />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/dilshan-senanayaka-7a78a9211"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FaLinkedin />
-              </a>
-              <a href="mailto:nimeshdilshan440@gmail.com">
-                <FaEnvelope />
-              </a>
+      <section id="home" className="home-section">
+        <canvas ref={canvasRef} className="comet-canvas" />
+        <div className="home-container">
+          <div className="home-content">
+            <div
+              className="profile-pic"
+              ref={profileRef}
+              style={{ position: "relative", width: 200, height: 200 }}
+            >
+              <img
+                src={profilePic}
+                alt="Dilshan Senanayaka"
+                style={{ borderRadius: "50%", width: "100%", height: "100%" }}
+              />
+              {/* Spinning comet */}
+              <span
+                className="spinning-comet"
+                style={{
+                  left: dotStyle.left,
+                  top: dotStyle.top,
+                  backgroundColor: dotStyle.backgroundColor,
+                  color: dotStyle.backgroundColor, // for box-shadow and tail
+                  width: 16,
+                  height: 16,
+                }}
+              />
             </div>
-            <div className="download-btn-container">
-              <a href={resumePDF} download className="download-btn">
-                Download CV
-              </a>
+
+            <div className="intro-text">
+              <h1>
+                Hello, I'm <FallingLetters text="Dilshan Senanayaka" />
+              </h1>
+              <h2 className="tagline">
+                Final Year ICT Undergraduate | Frontend | Mobile and Web Developer
+              </h2>
+              <p className="intro">
+                <AnimatedSentence />
+                <span>
+                  {" "}
+                  I specialize in React, Laravel, Firebase, and mobile app
+                  development using Android Studio | Flutter | React Native Expo.
+                  I love creating solutions that are both functional and
+                  beautifully crafted.
+                </span>
+              </p>
+              <div className="social-icons">
+                <a
+                  href="https://github.com/Dilo1999"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FaGithub />
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/dilshan-senanayaka-7a78a9211"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FaLinkedin />
+                </a>
+                <a href="mailto:nimeshdilshan440@gmail.com">
+                  <FaEnvelope />
+                </a>
+              </div>
+              <div className="download-btn-container">
+                <a href={resumePDF} download className="download-btn">
+                  Download CV
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
