@@ -1,35 +1,37 @@
 import React, { useState } from "react";
-import { Link } from "react-scroll";
+import { Link, useLocation } from "react-router-dom";
 import { FaBars, FaTimes } from "react-icons/fa";
 
 export default function Navbar() {
   const [navOpen, setNavOpen] = useState(false);
-
-  const toggleNav = () => setNavOpen(!navOpen);
+  const location = useLocation();
 
   const navLinks = [
-    { id: 1, to: "home", label: "Home" },
-    { id: 2, to: "about", label: "About" },
-    { id: 3, to: "projects", label: "Projects" },
-    { id: 4, to: "contact", label: "Contact" },
+    { id: 1, to: "/", label: "Home" },
+    { id: 2, to: "/about", label: "About" },
+    { id: 3, to: "/projects", label: "Projects" },
+    { id: 4, to: "/contact", label: "Contact" },
   ];
 
+  const toggleNav = () => setNavOpen(!navOpen);
+  const closeNav = () => setNavOpen(false);
+
   return (
-    <nav>
+    <nav className="modern-nav">
       <div className="nav-container">
-        <div className="logo">MyPortfolio</div>
+        <div className="logo">
+          <Link to="/" onClick={closeNav}>
+            <span>🚀 MyPortfolio</span>
+          </Link>
+        </div>
 
         <ul className={navOpen ? "nav-links open" : "nav-links"}>
           {navLinks.map(({ id, to, label }) => (
             <li key={id}>
               <Link
                 to={to}
-                smooth={true}
-                duration={500}
-                offset={-70}
-                spy={true}
-                activeClass="active"
-                onClick={() => setNavOpen(false)}
+                onClick={closeNav}
+                className={location.pathname === to ? "active" : ""}
               >
                 {label}
               </Link>
