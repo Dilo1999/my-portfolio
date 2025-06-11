@@ -30,7 +30,7 @@ function ScrollToSection() {
 
 export default function App() {
   return (
-    <Router>
+    <Router basename="/my-portfolio">
       <Navbar />
       <ScrollToSection />
       <main>
