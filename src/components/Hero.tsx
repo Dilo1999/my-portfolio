@@ -30,11 +30,10 @@ const Hero = () => {
           <h1 className="hero-title">
             Dilshan Senanayaka
           </h1>
-          <p className="hero-subtitle">
-            Junior Software Developer
-          </p>
+          <p className="hero-subtitle">Junior Software Developer</p>
           <p className="hero-description">
-            Passionate about building innovative solutions with clean, efficient code
+            Detail-oriented and enthusiastic developer focused on building clean, reliable solutions with modern web
+            technologies like Next.js, Laravel, WordPress, and React Native.
           </p>
           <div className="hero-buttons">
             <a href="#contact" className="btn-primary">
