@@ -2,10 +2,88 @@ import { useState } from 'react';
 import projectPlaceholder from '../assets/react.svg';
 
 const Projects = () => {
-  const categories = ['All', 'Web Dev', 'Plugins', 'E‑commerce', 'Other'];
+  const categories = [
+    'All',
+    'Mobile Apps',
+    'Machine Learning',
+    'Web Dev',
+    'Plugins',
+    'E‑commerce',
+    'Other',
+  ];
   const [activeCategory, setActiveCategory] = useState('All');
 
   const projects = [
+    {
+      title: 'University Learning Management System App',
+      category: 'Mobile Apps',
+      role: 'Full-stack mobile development',
+      image: projectPlaceholder,
+      technologies: ['Android Studio', 'Java', 'Firebase'],
+      tools: ['Android Studio', 'Firebase', 'Git'],
+      summary:
+        'Developed an Android app with Firebase integration, enabling student feedback submission and lecturer responses. Key features include user authentication, course management, and a feedback system.',
+    },
+    {
+      title: 'Greenhouse Automation App',
+      category: 'Mobile Apps',
+      role: 'Mobile app & IoT integration',
+      image: projectPlaceholder,
+      technologies: ['Android Studio', 'Java', 'Firebase', 'Machine Learning', 'IoT'],
+      tools: ['Android Studio', 'Firebase', 'API Integration'],
+      summary:
+        'Developed a mobile app using Android Studio for full greenhouse automation. Integrated Firebase for data storage and API communication with a machine learning model. Enabled control of IoT devices for real-time environmental management.',
+    },
+    {
+      title: 'Android Application For Sprinkles Bakery',
+      category: 'Mobile Apps',
+      role: 'Mobile app development',
+      image: projectPlaceholder,
+      technologies: ['Android Studio', 'Java', 'Firebase'],
+      tools: ['Android Studio', 'Firebase', 'Git'],
+      summary:
+        'This Android application has been created using Android Studio, Java, and Firebase for bakery management and operations.',
+    },
+    {
+      title: 'Android Application for Milk Shop Management System',
+      category: 'Mobile Apps',
+      role: 'Mobile app & database development',
+      image: projectPlaceholder,
+      technologies: ['Android Studio', 'Java', 'MySQL'],
+      tools: ['Android Studio', 'MySQL', 'Local Database'],
+      summary:
+        'This Android application has been created using Android Studio, Java, and Local database (MySQL) for managing milk shop operations.',
+    },
+    {
+      title: 'Hostel Management System App',
+      category: 'Mobile Apps',
+      role: 'Full-stack mobile development',
+      image: projectPlaceholder,
+      technologies: ['Android Studio', 'Java', 'Firebase'],
+      tools: ['Android Studio', 'Firebase', 'Real-time Database'],
+      summary:
+        'Developed an Android app for hostel management using Android Studio, integrating Firebase for real-time database and authentication, enabling features such as user registration, room allocation, fee tracking, and notifications.',
+    },
+    {
+      title: 'Face Recognition System',
+      category: 'Machine Learning',
+      role: 'Machine learning & computer vision',
+      image: projectPlaceholder,
+      technologies: ['Python', 'Machine Learning', 'Computer Vision'],
+      tools: ['Python', 'OpenCV', 'Machine Learning Libraries'],
+      summary:
+        'Automatically find all the faces in an image. Recognize and manipulate faces from Python and Marking Attendance using face recognition technology.',
+    },
+    {
+      title: 'Support Vector Machine (SVM Model)',
+      category: 'Machine Learning',
+      role: 'Machine learning algorithm development',
+      image: projectPlaceholder,
+      technologies: ['Python', 'Machine Learning', 'SVM'],
+      tools: ['Python', 'Scikit-learn', 'Data Analysis Tools'],
+      summary:
+        'Using machine learning algorithm to solve complex classification, regression, and outlier detection problems with Support Vector Machine implementation.',
+    },
     {
       title: 'Business Website Development',
       category: 'Web Dev',
@@ -59,7 +137,7 @@ const Projects = () => {
         <div className="projects-header">
           <h2 className="section-title">Projects</h2>
           <p className="projects-subtitle">
-            A curated selection of real-world work across web apps, plugins, and e‑commerce solutions.
+            A collection of mobile applications, machine learning projects, and software solutions showcasing diverse technical skills.
           </p>
 
           <div className="projects-tabs">
